@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Ketaby Library | My Dashboard{% endblock %}
+
+{% block content %}
+<div class="user-dashboard">
+    <header class="container dashboard-header">
+        <div class="welcome-message">
+            <span class="section-tag">Reader Workspace</span>
+            <h1>Welcome back, {{ user.username }}</h1>
+            <p>Track your active loans, reading history, and fresh recommendations in one clean view.</p>
+        </div>
+        <a class="btn-premium secondary" href="{% url 'books_list' %}">Browse Catalog</a>
+    </header>
+
+    <section class="container user-stats" aria-label="Reader statistics">
+        <div class="user-stat-card">
+            <div class="stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <h3>{{ borrowed_count }}</h3>
+                <p>Books Borrowed</p>
+            </div>
+        </div>
+        <div class="user-stat-card">
+            <div class="stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M7 3h10v18H7z"></path>
+                    <path d="M9 7h6"></path>
+                    <path d="M9 11h6"></path>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <h3>{{ active_borrows|length }}</h3>
+                <p>Currently Reading</p>
+            </div>
+        </div>
+        <div class="user-stat-card">
+            <div class="stat-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5"></path>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <h3>{{ history|length }}</h3>
+                <p>Returned Books</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container borrowed-section">
+        <div class="section-header section-header-row">
+            <div>
+                <span class="section-tag">Active Loans</span>
+                <h2 class="section-title">Currently borrowed</h2>
+            </div>
+            {% if active_borrows %}
+                <span class="section-badge">{{ active_borrows|length }} active</span>
+            {% endif %}
+        </div>
+
+        {% if active_borrows %}
+            <div class="borrowed-grid">
+                {% for borrow in active_borrows %}
+                    <article class="borrowed-card">
+                        <div class="borrowed-cover">
+                            <img src="{{ borrow.book.cover_image_url }}" alt="{{ borrow.book.title }}" loading="lazy">
+                        </div>
+                        <div class="borrowed-info">
+                            <h3>{{ borrow.book.title }}</h3>
+                            <p class="borrowed-author">{{ borrow.book.author }}</p>
+                            <span class="borrowed-category">{{ borrow.book.category.name }}</span>
+                            <div class="borrowed-meta">
+                                <span>Borrowed {{ borrow.borrow_date }}</span>
+                            </div>
+                        </div>
+                        <form method="post" action="{% url 'return_book' borrow.id %}" class="return-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-return">Return Book</button>
+                        </form>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-borrowed">
+                <h3>No active borrowed books</h3>
+                <p>Browse the catalog and start your next read when you are ready.</p>
+                <a href="{% url 'books_list' %}" class="btn-premium primary">Browse Books</a>
+            </div>
+        {% endif %}
+    </section>
+
+    {% if history %}
+        <section class="container history-section">
+            <div class="section-header">
+                <span class="section-tag">Reading Record</span>
+                <h2 class="section-title">Reading history</h2>
+            </div>
+            <div class="history-list">
+                {% for borrow in history %}
+                    <div class="history-item">
+                        <img src="{{ borrow.book.cover_image_url }}" alt="{{ borrow.book.title }}" class="history-cover">
+                        <div class="history-details">
+                            <h4>{{ borrow.book.title }}</h4>
+                            <p>{{ borrow.book.author }}</p>
+                            <span class="returned-date">Returned on {{ borrow.return_date }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="container recommended-section">
+        <div class="section-header section-header-row">
+            <div>
+                <span class="section-tag">Next Reads</span>
+                <h2 class="section-title">Recommended for you</h2>
+            </div>
+            <a href="{% url 'books_list' %}" class="text-link">View all books</a>
+        </div>
+        <div class="recommended-grid">
+            {% for book in recommended_books %}
+                <article class="recommended-card">
+                    <div class="rec-cover">
+                        <img src="{{ book.cover_image_url }}" alt="{{ book.title }}" loading="lazy">
+                    </div>
+                    <div class="rec-info">
+                        <h4>{{ book.title }}</h4>
+                        <p>{{ book.author }}</p>
+                    </div>
+                    <a href="{% url 'book_details' book.id %}" class="btn-view">View Details</a>
+                </article>
+            {% empty %}
+                <div class="empty-rec">
+                    <p>More recommendations will appear as the catalog grows.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

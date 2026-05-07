@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Ketaby Library | Catalog{% endblock %}
+
+{% block content %}
+<div class="books-page-premium">
+    <header class="container books-page-header">
+        <div class="header-content">
+            <span class="section-tag">Browse Catalog</span>
+            <h1>Available books</h1>
+            <p>Explore the full Ketaby collection with clear availability and elegant book previews.</p>
+        </div>
+        <div class="page-header-actions">
+            <a class="btn-premium secondary" href="{% url 'search_results' %}">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M20 20l-3.5-3.5"></path>
+                </svg>
+                <span>Search Catalog</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="container books-showcase-premium" aria-label="Books catalog">
+        {% for book in books %}
+            <article class="book-card-premium" style="--delay: {{ forloop.counter0 }}">
+                <div class="book-image-wrap">
+                    <div class="book-image-inner">
+                        <img src="{{ book.cover_image_url }}" alt="{{ book.title }}" loading="lazy">
+                    </div>
+                    <div class="book-overlay">
+                        <a class="view-btn" href="{% url 'book_details' book.id %}">
+                            <span>View Details</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5 12h14"></path>
+                                <path d="M13 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    {% if book.is_available %}
+                        <div class="availability-badge available">Available</div>
+                    {% else %}
+                        <div class="availability-badge borrowed">Borrowed</div>
+                    {% endif %}
+                </div>
+                <div class="book-info">
+                    <h3 class="book-title">{{ book.title }}</h3>
+                    <p class="book-author">by {{ book.author }}</p>
+                    <span class="book-category">{{ book.category.name }}</span>
+                </div>
+            </article>
+        {% empty %}
+            <div class="empty-state">
+                <h3>No books available</h3>
+                <p>The catalog is being updated. Check back soon.</p>
+            </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

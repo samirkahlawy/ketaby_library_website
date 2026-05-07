@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ketaby Library | Home{% endblock %}
+
+{% block content %}
+<div class="home-page">
+    <section class="home-hero" aria-label="Ketaby Library">
+        <img class="home-hero-image" src="{% static 'app_library/images/auth-illustration.png' %}" alt="">
+        <div class="home-hero-overlay"></div>
+        <div class="container home-hero-content">
+            <span class="eyebrow">Premium Library Platform</span>
+            <h1>Ketaby Library</h1>
+            <p>Discover curated books, borrow in seconds, and manage your reading from a calm, polished dashboard built for serious readers.</p>
+            <div class="hero-actions-premium">
+                <a class="btn-premium primary" href="{% url 'books_list' %}">
+                    <span>Explore Catalog</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 12h14"></path>
+                        <path d="M13 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                <a class="btn-premium secondary" href="{% url 'search_results' %}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="M20 20l-3.5-3.5"></path>
+                    </svg>
+                    <span>Search Books</span>
+                </a>
+            </div>
+            <div class="hero-metrics" aria-label="Library highlights">
+                <div>
+                    <strong>2K+</strong>
+                    <span>Catalog items</span>
+                </div>
+                <div>
+                    <strong>600+</strong>
+                    <span>Active readers</span>
+                </div>
+                <div>
+                    <strong>24/7</strong>
+                    <span>Digital access</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="collection-strip">
+        <div class="container collection-strip-grid">
+            <article>
+                <span>01</span>
+                <h2>Curated shelves</h2>
+                <p>Quality picks across fiction, business, technology, and personal growth.</p>
+            </article>
+            <article>
+                <span>02</span>
+                <h2>Fast borrowing</h2>
+                <p>Clear availability states and a smooth borrowing path for logged-in readers.</p>
+            </article>
+            <article>
+                <span>03</span>
+                <h2>Smart management</h2>
+                <p>Admin and reader dashboards designed for quick scanning and action.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="promo-section">
+        <div class="container section-header">
+            <span class="section-tag">Featured Collections</span>
+            <h2 class="section-title">Shelves worth opening</h2>
+            <p class="section-subtitle">A library homepage should feel calm, capable, and a little irresistible.</p>
+        </div>
+
+        <div class="container promo-grid-premium">
+            <article class="promo-card-premium amber">
+                <span class="promo-kicker">Fiction Desk</span>
+                <h3>Modern stories and timeless classics</h3>
+                <p>Browse novels, literary favorites, and thoughtful weekend reads.</p>
+                <a class="text-link" href="{% url 'books_list' %}">Browse fiction</a>
+            </article>
+
+            <article class="promo-card-premium green">
+                <span class="promo-kicker">Professional Shelf</span>
+                <h3>Books for sharper work and better habits</h3>
+                <p>Explore leadership, productivity, technology, and growth titles.</p>
+                <a class="text-link" href="{% url 'books_list' %}">Browse growth</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="featured-section">
+        <div class="container section-header section-header-row">
+            <div>
+                <span class="section-tag">Curated Selection</span>
+                <h2 class="section-title">Trending books</h2>
+            </div>
+            <a class="text-link" href="{% url 'books_list' %}">View all books</a>
+        </div>
+
+        <div class="container books-showcase">
+            {% for book in featured_books %}
+                <article class="book-card-premium" style="--delay: {{ forloop.counter0 }}">
+                    <div class="book-image-wrap">
+                        <div class="book-image-inner">
+                            <img src="{{ book.cover_image_url }}" alt="{{ book.title }}" loading="lazy">
+                        </div>
+                        <div class="book-overlay">
+                            <a class="view-btn" href="{% url 'book_details' book.id %}">
+                                <span>View Details</span>
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M5 12h14"></path>
+                                    <path d="M13 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        {% if book.is_available %}
+                            <div class="availability-badge available">Available</div>
+                        {% else %}
+                            <div class="availability-badge borrowed">Borrowed</div>
+                        {% endif %}
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-author">by {{ book.author }}</p>
+                        <span class="book-category">{{ book.category.name }}</span>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <h3>No featured books yet</h3>
+                    <p>Add books to start building the Ketaby collection.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

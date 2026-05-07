@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Ketaby Library | Login{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card">
+        <span class="section-tag">Welcome Back</span>
+        <h1>Sign in to Ketaby</h1>
+        <p>Use your username or Gmail address to continue to your library.</p>
+
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            <div class="field">
+                <label for="id_login">Email or Username</label>
+                {{ form.login }}
+            </div>
+
+            <div class="field">
+                <label for="id_password">Password</label>
+                <div class="password-wrap">
+                    {{ form.password }}
+                    <button type="button" class="toggle-password" data-target="id_password" aria-label="Show password">Show</button>
+                </div>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <button type="submit" class="primary-btn wide-btn">Login</button>
+        </form>
+
+        <p class="auth-footer">No account? <a href="{% url 'sign_up' %}">Create one</a></p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Ketaby Library | {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="details-shell">
+    <article class="container details-card">
+        <div class="details-cover-panel">
+            <img class="details-cover" src="{{ book.cover_image_url }}" alt="{{ book.title }}">
+            {% if book.is_available %}
+                <span class="status-pill available">Available now</span>
+            {% else %}
+                <span class="status-pill borrowed">Currently borrowed</span>
+            {% endif %}
+        </div>
+
+        <div class="details-info">
+            <span class="section-tag">{{ book.category.name }}</span>
+            <h1>{{ book.title }}</h1>
+            <p class="details-author">by {{ book.author }}</p>
+
+            <div class="details-meta">
+                <p><strong>Book ID</strong><span>#{{ book.id }}</span></p>
+                <p><strong>Category</strong><span>{{ book.category.name }}</span></p>
+                <p><strong>Copies</strong><span>{{ book.available_copies }} of {{ book.total_copies }} available</span></p>
+            </div>
+
+            <div class="details-description">
+                <h2>About this book</h2>
+                <p>{{ book.description }}</p>
+            </div>
+
+            <div class="details-actions">
+                <form method="post" action="{% url 'borrow_book' book.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="primary-btn" {% if not book.is_available %}disabled{% endif %}>Borrow Book</button>
+                </form>
+                <a class="ghost-btn" href="{% url 'books_list' %}">Back to Catalog</a>
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}

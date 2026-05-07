@@ -1,0 +1,138 @@
+{% load static %}
+{% load library_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ketaby Library{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'app_library/css/style.css' %}?v={% now 'U' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="top-strip">
+            <div class="container top-strip-content">
+                <span>Curated digital library for modern readers</span>
+                <a href="mailto:support@ketaby.com">support@ketaby.com</a>
+            </div>
+        </div>
+
+        <div class="container header-main">
+            <a class="brand" href="{% url 'home' %}" aria-label="Ketaby Library home">
+                <span class="brand-mark">
+                    <img src="{% static 'app_library/images/image.png' %}" alt="">
+                </span>
+                <span class="brand-copy">
+                    <strong>Ketaby</strong>
+                    <small>Library</small>
+                </span>
+            </a>
+
+            <form class="quick-search" method="get" action="{% url 'search_results' %}">
+                <label class="sr-only" for="globalSearch">Search books, authors, or categories</label>
+                <input id="globalSearch" type="text" name="query" placeholder="Search books, authors, categories">
+                <button type="submit" aria-label="Search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="M20 20l-3.5-3.5"></path>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="header-actions">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'books_list' %}">Books</a>
+                    {% if user|is_librarian %}
+                        <a href="{% url 'admin_dashboard' %}">Admin</a>
+                    {% else %}
+                        <a href="{% url 'user_dashboard' %}">My Library</a>
+                    {% endif %}
+                    <a class="btn-link btn-link-muted" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a class="btn-link" href="{% url 'sign_up' %}">Create account</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <nav class="main-nav" aria-label="Primary navigation">
+            <div class="container nav-scroll">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'books_list' %}">Catalog</a>
+                <a href="{% url 'search_results' %}">Search</a>
+                {% if user.is_authenticated %}
+                    {% if user|is_librarian %}
+                        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+                        <a href="{% url 'add_book' %}">Add Book</a>
+                    {% else %}
+                        <a href="{% url 'user_dashboard' %}">Dashboard</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a class="brand brand-inverted" href="{% url 'home' %}">
+                    <span class="brand-mark">
+                        <img src="{% static 'app_library/images/image.png' %}" alt="">
+                    </span>
+                    <span class="brand-copy">
+                        <strong>Ketaby</strong>
+                        <small>Library</small>
+                    </span>
+                </a>
+                <p>A premium online library experience for browsing, borrowing, and managing books with confidence.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Library</h4>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'books_list' %}">Catalog</a>
+                <a href="{% url 'search_results' %}">Search</a>
+            </div>
+
+            <div class="footer-links">
+                <h4>Account</h4>
+                {% if user.is_authenticated %}
+                    {% if user|is_librarian %}
+                        <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'user_dashboard' %}">My Library</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'sign_up' %}">Create Account</a>
+                {% endif %}
+            </div>
+
+            <div class="footer-links">
+                <h4>Support</h4>
+                <a href="mailto:support@ketaby.com">support@ketaby.com</a>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>&copy; 2026 Ketaby Library.</span>
+            <span>Built for focused reading and thoughtful collections.</span>
+        </div>
+    </footer>
+
+    <script src="{% static 'app_library/js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

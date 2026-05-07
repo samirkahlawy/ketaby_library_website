@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Ketaby Library | Add Book{% endblock %}
+
+{% block content %}
+<section class="form-shell">
+    <div class="container form-layout">
+        <header class="form-intro">
+            <span class="section-tag">Catalog Management</span>
+            <h1>Add a new book</h1>
+            <p>Create a polished catalog entry with the required metadata and copy count.</p>
+        </header>
+
+        <form method="post" class="panel-form">
+            {% csrf_token %}
+            <div class="field">
+                <label for="book_name">Book Name</label>
+                <input type="text" id="book_name" name="book_name" required>
+            </div>
+            <div class="field">
+                <label for="author">Author Name</label>
+                <input type="text" id="author" name="author" required>
+            </div>
+            <div class="field">
+                <label for="category">Category</label>
+                <input type="text" id="category" name="category" required>
+            </div>
+            <div class="field">
+                <label for="cover_image_url">Cover Image URL</label>
+                <input type="url" id="cover_image_url" name="cover_image_url" placeholder="https://...">
+            </div>
+            <div class="field">
+                <label for="total_copies">Total Copies</label>
+                <input type="number" id="total_copies" name="total_copies" min="1" value="1" required>
+            </div>
+            <div class="field field-full">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="6" required></textarea>
+            </div>
+            <div class="form-actions field-full">
+                <input type="submit" value="Add Book" class="primary-btn wide-btn">
+                <input type="reset" id="clear" value="Clear Form" class="ghost-btn">
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

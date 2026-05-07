@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Ketaby Library | Borrowed Books{% endblock %}
+
+{% block content %}
+<section class="search-page">
+    <div class="container search-hero compact">
+        <span class="section-tag">Reader Account</span>
+        <h1>My borrowed books</h1>
+        <p>Review the books currently connected to your account.</p>
+    </div>
+
+    <div class="container table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Borrow Date</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td>#{{ record.book.id }}</td>
+                        <td>{{ record.book.title }}</td>
+                        <td>{{ record.book.author }}</td>
+                        <td>{{ record.borrow_date }}</td>
+                        <td><a class="table-link" href="{% url 'book_details' record.book.id %}">Details</a></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="5">You have not borrowed any books yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

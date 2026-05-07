@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Ketaby Library | Edit Book{% endblock %}
+
+{% block content %}
+<section class="form-shell">
+    <div class="container form-layout">
+        <header class="form-intro">
+            <span class="section-tag">Catalog Management</span>
+            <h1>Edit book details</h1>
+            <p>Update the visible catalog information while keeping the existing book record.</p>
+        </header>
+
+        <form method="post" class="panel-form">
+            {% csrf_token %}
+            <div class="field">
+                <label for="edit_book_id">Book ID</label>
+                <input type="number" id="edit_book_id" name="edit_book_id" value="{{ book.id }}" readonly>
+            </div>
+            <div class="field">
+                <label for="edit_book_name">Book Name</label>
+                <input type="text" id="edit_book_name" name="edit_book_name" value="{{ book.title }}" required>
+            </div>
+            <div class="field">
+                <label for="edit_author">Author Name</label>
+                <input type="text" id="edit_author" name="edit_author" value="{{ book.author }}" required>
+            </div>
+            <div class="field">
+                <label for="edit_category">Category</label>
+                <input type="text" id="edit_category" name="edit_category" value="{{ book.category.name }}" required>
+            </div>
+            <div class="field field-full">
+                <label for="edit_cover_image_url">Cover Image URL</label>
+                <input type="url" id="edit_cover_image_url" name="edit_cover_image_url" value="{{ book.cover_image_url }}">
+            </div>
+            <div class="field field-full">
+                <label for="edit_description">Description</label>
+                <textarea id="edit_description" name="edit_description" rows="6" required>{{ book.description }}</textarea>
+            </div>
+            <div class="form-actions field-full">
+                <input type="submit" value="Save Changes" class="primary-btn wide-btn">
+                <a class="ghost-btn" href="{% url 'admin_dashboard' %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
