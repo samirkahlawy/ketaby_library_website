@@ -35,7 +35,7 @@ Follow these instructions to run the Ketaby Library System on your local machine
 
 1. **Clone the repository** (if you haven't already):
    ```bash
-   git clone <your-repository-url>
+   git clone https://github.com/samirkahlawy/ketaby_library_website
    cd ketaby_lib
    ```
 
